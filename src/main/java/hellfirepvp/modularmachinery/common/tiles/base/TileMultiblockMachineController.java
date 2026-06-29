@@ -396,7 +396,9 @@ public abstract class TileMultiblockMachineController extends TileEntityRestrict
         }
         updateStatedMachineComponentSync(false);
 
-        prevMachine = foundMachine;
+        if (foundMachine != null) {
+            prevMachine = foundMachine;
+        }
         foundMachine = null;
         foundPattern = null;
         foundReplacements = null;
