@@ -22,7 +22,6 @@ import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.event.world.BlockEvent;
@@ -320,10 +319,15 @@ public class MachineAssembly {
 
         IBlockState blockState = world.getBlockState(realPos);
         Block block = blockState.getBlock();
-        if (world.isAirBlock(realPos) ||
-            block instanceof IPlantable ||
-            block instanceof BlockLiquid ||
-            block instanceof IFluidBlock) {
+        if (world.isAirBlock(realPos)) {
+            return true;
+        }
+
+        // Never replace blocks with TileEntities, since doing so may destroy machine or inventory data.
+        if (world.getTileEntity(realPos) == null &&
+            (block.isReplaceable(world, realPos) ||
+             block instanceof BlockLiquid ||
+             block instanceof IFluidBlock)) {
             return true;
         }
 
